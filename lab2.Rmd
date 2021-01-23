@@ -1,0 +1,53 @@
+---
+title: "ESM 244 Lab Week 2"
+author: "Lory Salazar"
+date: "1/23/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(janitor)
+library(palmerpenguins)
+library(here)
+
+# For PCA:
+library(ggfortify)
+
+#For ggplot customization
+library(readxl)
+library(gghighlight)
+library(lubridate)
+library(plotly)
+
+# To make compound figures:
+library(patchwork)
+```
+
+## Part 1: PCA with penguins
+
+```{r}
+penguin_pca <- penguins %>% 
+  select(body_mass_g, ends_with("_mm")) %>% # to select a column ending with "_mm"
+  drop_na() %>% # in parenthesis can include specific variables to drop for instead of dropping all NAs
+  scale() %>% # to scale the data 
+  prcomp() # to run the PCA
+
+penguin_pca$rotation
+
+penguin_complete <- penguins %>% 
+  drop_na(body_mass_g, ends_with("_mm")) # we created this subset to have a subset of the data without the NAs for the variables we're interested in, but still including the other variables which we might want to use in our plot
+
+# autoplot will assume that we want a biplot for the PCA
+autoplot(penguin_pca,
+         data = penguin_complete,
+         colour = "species",
+         loadings = TRUE,
+         loadings.label = TRUE) +
+  theme_minimal()
+```
+
+
+
+
